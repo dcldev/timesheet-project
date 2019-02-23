@@ -12,6 +12,12 @@
 </head>
 
 <body>
+
+    <div class="container text-center" id="top">
+        <h1>Employee Data Management</h1>
+        <p>A Comprehensive Directory of Employee Billable Hours</p>
+     </div>
+
   <div class="container">
     <div class="card">
       <div class="card-header"> <Strong>Current Employee</Strong></div>
@@ -24,15 +30,12 @@
             <th scope="col">Months Worked</th>
             <th scope="col">Monthly Rate ($)</th>
             <th scope="col">Total Billed($)</th>
-            <th scope="col">Handle</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
 
     </div>
-
-
   <div class="form-container">
     <div class="card">
         <h2 class="card-header">Add Employee</h2>
@@ -44,107 +47,29 @@
             </div>
             <div class="form-group">
               <label for="employeeRoleInput">Role</label>
-              <input class="form-control" id="employeeRole" placeholder="">
-                  </div>
-                  <div class="form-group">
-                    <label for="employeeStartDateInput">Start Date (MM/DD/YYYY)</label>
-                    <input class="form-control" id="employeeStartDate" placeholder="">
-                  </div>
-                  <div class="form-group">
-                    <label for="employeeMonthlyRateInput">Monthly Rate</label>
-                    <input class="form-control" id="employeeMonthlyRate" placeholder="">
-                  </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-              </form> 
-          </div>
+              <input class="form-control" id="employeeRole" placeholder="CEO">
+            </div>
+            <div class="form-group">
+              <label for="employeeStartDateInput">Start Date (MM/DD/YYYY)</label>
+              <input class="form-control" id="employeeStartDate" placeholder="Current Date">
+            </div>
+            <div class="form-group">
+              <label for="employeeMonthlyRateInput">Monthly Rate</label>
+              <input class="form-control" id="employeeMonthlyRate" placeholder="How Much?">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form> 
+        </div>
       </div>
   </div>  
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-       crossorigin="anonymous"></script>  
-       <script src="assets/javascript/moment.js"></script>
-       <script src="assets/javascript/timesheet.js"></script>
-       <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
-<script>
-    var config = {
-    apiKey: "AIzaSyDlBoG7DaPhUu-mh2fvTtqAEQikLqhjIJw",
-    authDomain: "timesheet-be233.firebaseapp.com",
-    databaseURL: "https://timesheet-be233.firebaseio.com",
-    projectId: "timesheet-be233",
-    storageBucket: "timesheet-be233.appspot.com",
-    messagingSenderId: "548609060395"
-  };
-  firebase.initializeApp(config);
-  var database = firebase.database();
-
-  $("button[type=submit]").on("click", function (event) {
-
-    event.preventDefault();
-
-    var employeeName = $("#employeeName").val().trim();
-    var employeeRole = $("#employeeRole").val().trim();
-    var employeeStartDate = $("#employeeStartDate").val().trim();
-    var employeeMonthlyRate = $("#employeeMonthlyRate").val().trim();
-
-    database.ref().push({
-      employeeName: employeeName,
-      employeeRole: employeeRole,
-      employeeStartDate: employeeStartDate,
-      employeeMonthlyRate: employeeMonthlyRate
-    });
-
-
-
-  });
-
-  database.ref().orderByChild("employeeStartDate").on("child_added",function(snapshot){
-
-    var entry = snapshot.val();
-
-    var today = new Date();
-    var employeeMonths = Math.round(moment(today).diff(moment(entry.employeeStartDate), 'months', true));
-    
-    var rowEntry = $("<tr>");
-    var rowCol = $("<td>");
-    rowCol.addClass("col");
-    rowCol.text(entry.employeeName);
-    rowEntry.append(rowCol);
-
-    rowCol = $("<td>");
-    rowCol.addClass("col");
-    rowCol.text(entry.employeeRole);
-    rowEntry.append(rowCol);
-
-    rowCol = $("<td>");
-    rowCol.addClass("col");
-    rowCol.text(entry.employeeStartDate);
-    rowEntry.append(rowCol);
-
-    rowCol = $("<td>");
-    rowCol.addClass("col");
-    rowCol.text(entry.employeeMonths);
-    rowEntry.append(rowCol);
-
-    rowCol = $("<td>");
-    rowCol.addClass("col");
-    rowCol.text(entry.employeeMonthlyRate);
-    rowEntry.append(rowCol);
-    
-    var total = entry.employeeMonthlyRate * employeeMonths;
-    
-    rowCol = $("<td>");
-    rowCol.addClass("col");
-    rowCol.text(total);
-    rowEntry.append(rowCol);
-
-    console.log(rowEntry);
-
-    $('tbody').append(rowEntry);
-
-  });
-
-
-</script>
-
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+          crossorigin="anonymous"></script>  
+    <script src="assets/javascript/jquery.formatCurrency-1.4.0.min.js"></script>
+    <script src="assets/javascript/moment.js"></script>
+    <script src="assets/javascript/jquery.maskedinput.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script src="assets/javascript/timesheet.js"></script>
+        
 
       </body>
 </html>
