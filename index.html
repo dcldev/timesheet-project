@@ -61,8 +61,20 @@
   </div>  
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
        crossorigin="anonymous"></script>  
-       <script src="javascript/js/timesheet.js"></script>
+       <script src="assets/javascript/moment.js"></script>
+       <script src="assets/javascript/timesheet.js"></script>
+       <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
 <script>
+    var config = {
+    apiKey: "AIzaSyDlBoG7DaPhUu-mh2fvTtqAEQikLqhjIJw",
+    authDomain: "timesheet-be233.firebaseapp.com",
+    databaseURL: "https://timesheet-be233.firebaseio.com",
+    projectId: "timesheet-be233",
+    storageBucket: "timesheet-be233.appspot.com",
+    messagingSenderId: "548609060395"
+  };
+  firebase.initializeApp(config);
+  var database = firebase.database();
 
   $("button[type=submit]").on("click", function (event) {
 
@@ -71,37 +83,54 @@
     var employeeName = $("#employeeName").val().trim();
     var employeeRole = $("#employeeRole").val().trim();
     var employeeStartDate = $("#employeeStartDate").val().trim();
-    var employeeMonths = 0;
-    var employeeMonthlyRate = $("#employeeMonthlyRate").trim();
+    var employeeMonthlyRate = $("#employeeMonthlyRate").val().trim();
 
+    database.ref().push({
+      employeeName: employeeName,
+      employeeRole: employeeRole,
+      employeeStartDate: employeeStartDate,
+      employeeMonthlyRate: employeeMonthlyRate
+    });
+
+
+
+  });
+
+  database.ref().orderByChild("employeeStartDate").on("child_added",function(snapshot){
+
+    var entry = snapshot.val();
+
+    var today = new Date();
+    var employeeMonths = Math.round(moment(today).diff(moment(entry.employeeStartDate), 'months', true));
+    
     var rowEntry = $("<tr>");
     var rowCol = $("<td>");
     rowCol.addClass("col");
-    rowCol.text(employeeName);
+    rowCol.text(entry.employeeName);
     rowEntry.append(rowCol);
 
     rowCol = $("<td>");
     rowCol.addClass("col");
-    rowCol.text(employeeRole);
+    rowCol.text(entry.employeeRole);
     rowEntry.append(rowCol);
 
     rowCol = $("<td>");
     rowCol.addClass("col");
-    rowCol.text(employeeStartDate);
+    rowCol.text(entry.employeeStartDate);
     rowEntry.append(rowCol);
 
     rowCol = $("<td>");
     rowCol.addClass("col");
-    rowCol.text(employeeMonths);
+    rowCol.text(entry.employeeMonths);
     rowEntry.append(rowCol);
 
     rowCol = $("<td>");
     rowCol.addClass("col");
-    rowCol.text(employeeMonthlyRate);
+    rowCol.text(entry.employeeMonthlyRate);
     rowEntry.append(rowCol);
     
-    var total = employeeMonthlyRate * employeeMonths;
-      
+    var total = entry.employeeMonthlyRate * employeeMonths;
+    
     rowCol = $("<td>");
     rowCol.addClass("col");
     rowCol.text(total);
@@ -110,7 +139,6 @@
     console.log(rowEntry);
 
     $('tbody').append(rowEntry);
-
 
   });
 
