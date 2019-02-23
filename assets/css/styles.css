@@ -1,5 +1,20 @@
 #top{
-    height:120px;
+    padding: 20px 0 30px;
     background-color:rgb(1, 50, 67);
     color:white;
+    margin: 0 auto 20px auto;
 }
+
+table { 
+    padding: 20px;
+    border: 1px solid #000;
+    border-radius: 4px;
+}
+
+thead { 
+    background: #000;
+    color: #FFF;
+
+}
+
+.form-container { padding: 20px 0 30px 0; }
